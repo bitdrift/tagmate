@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <!-- Required dependencies -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="./jquery.fieldselection.js"></script>
+    <script type="text/javascript" src="./jquery.scrollTo.js"></script>
+
+    <!-- jQuery Tagmate import -->
+    <script type="text/javascript" src="./jquery.tagmate.js"></script>
+
+    <script type="text/javascript">
+      $(function() {
+          var options = [
+              {label: "George Washington",         value: "george"},
+              {label: "Abraham Lincoln",           value: "abe"},
+              {label: "Andrew Jackson",            value: "andy"},
+              {label: "Thomas Jefferson",          value: "tj"},
+              {label: "Alexander Hamilton",        value: "alex"},
+              {label: "John F. Kennedy",           value: "jfk"},
+              {label: "Teddy Roosevelt",           value: "teddy"},
+              {label: "Franklin Delano Roosevelt", value: "fdr"}
+          ];
+
+          $("textarea").tagmate({
+              exprs: {
+                  "@": Tagmate.NAME_TAG_EXPR,
+                  "#": Tagmate.HASH_TAG_EXPR,
+                  "$": Tagmate.PRICE_TAG_EXPR,
+                  "£": Tagmate.PRICE_TAG_EXPR
+              },
+              sources: {
+                  "@": function(request, response) {
+                      // use convenience filter function 
+                      var filtered = Tagmate.filterOptions(options, request.term);
+                      response(filtered);
+                  }
+              },
+              capture_tag: function(tag) {
+                  console.log("Got tag: " + tag);
+              },
+              replace_tag: function(tag, value) {
+                  console.log("Replaced tag: " + tag + " with: " + value);
+              },
+              highlight_tags: true,
+              highlight_class: "hilite",
+              menu_class: "menu",
+              menu_option_class: "option",
+              menu_option_active_class: "active"
+          });
+
+          $("#get_all_tags").click(function() {
+              alert($("textarea").getTags());
+          });
+
+          $("#get_name_tags").click(function() {
+              alert($("textarea").getTags({
+                  "@": Tagmate.NAME_TAG_EXPR
+              }));
+          });
+
+          $("#get_hash_tags").click(function() {
+              alert($("textarea").getTags({
+                  "#": Tagmate.HASH_TAG_EXPR
+              }));
+          });
+
+          $("#get_price_tags").click(function() {
+              alert($("textarea").getTags({
+                  "$": Tagmate.MONEY_TAG_EXPR
+              }));
+          });
+      });
+    </script>
+    <style type="text/css">
+      textarea {
+          height: 150px;
+          width: 400px;
+      }
+      .menu {
+          overflow: auto;
+          max-height: 54px;
+          width: 400px;
+          background: #EEE;
+      }
+      .option {
+          background: #EEE;
+          padding: 3px;
+      }
+      .option:hover, .active {
+          background: lightblue;
+      }
+      .hilite {
+          background: lightblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div><textarea id="ta"></textarea></div>
+    <div>
+      <button id="get_all_tags">Get All Tags</button>
+      <button id="get_name_tags">Get Name Tags</button>
+      <button id="get_hash_tags">Get Hash Tags</button>
+      <button id="get_price_tags">Get Price Tags</button>
+    </div>
+  </body>
+</html>
